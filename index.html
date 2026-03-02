@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>🌱 1학년 7반 성장 선언 프로젝트</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #c3f0ca, #f9f7d9);
+    padding: 30px;
+}
+h2 { text-align: center; }
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+.buttonBox {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    max-height: 240px;
+    overflow-y: scroll;
+}
+.exampleBtn {
+    padding: 6px 12px;
+    border-radius: 15px;
+    border: none;
+    margin: 4px;
+    background-color: #40916c;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+}
+.mainBtn {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    margin-top: 10px;
+    background-color: #2d6a4f;
+    color: white;
+    cursor: pointer;
+}
+.resultBox {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 15px;
+}
+</style>
+</head>
+<body>
+
+<h2>🌱 1학년 7반 나는 이런 사람이 될래요 🌱</h2>
+
+<label>👤 이름</label>
+<input type="text" id="name">
+
+<label>🎯 나는 이런 사람이 될래요</label>
+<input type="text" id="bigHabit">
+<div class="buttonBox" id="bigButtons"></div>
+
+<label>✨ 그런 사람이 되기 위한 작은 습관</label>
+<input type="text" id="smallHabit">
+<div class="buttonBox" id="smallButtons"></div>
+
+<button class="mainBtn" onclick="generate()">📜 나의 선언서 만들기</button>
+<button class="mainBtn" onclick="copyText()">📋 담임샘 제출용 복사</button>
+
+<div id="result"></div>
+
+<script>
+
+// ===== 정체성 목표 =====
+const bigHabits = [
+"긍정적인 사람","끝까지 해내는 사람","배움을 즐기는 사람",
+"시간을 지키는 사람","책임감 있는 사람","스스로 공부하는 사람",
+"남을 존중하는 사람","감사하는 사람","건강한 사람",
+"감정을 잘 다루는 사람","차분한 사람","정리 잘하는 사람",
+"미루지 않는 사람","도전하는 사람","배려하는 사람",
+"솔직한 사람","집중 잘하는 사람","자신을 믿는 사람",
+"밝은 에너지를 주는 사람","약속을 지키는 사람","꾸준한 사람",
+"성실한 사람","예의 바른 사람","몸과 마음이 건강한 사람",
+"도망치지 않는 사람","목표를 실천하는 사람","매일 성장하는 사람",
+"all 1등급 받는 사람","공부하는 근육보이","공부하는 근육걸",
+"멘탈 강한 사람","루틴 있는 사람","자기관리 잘하는 사람",
+"선생님께 신뢰받는 학생","친구에게 좋은 영향 주는 사람",
+"자기 자신이 자랑스러운 사람"
+];
+
+// ===== 작은 습관 정확히 90개 =====
+const smallHabits = [
+
+"하루 3가지 감사 적기",
+"감사일기 한 줄 쓰기",
+"오늘 잘한 일 1개 적기",
+"하루 한 줄 일기 쓰기",
+"아침에 오늘 계획 한 줄 쓰기",
+"수업 시작 전 30초 예습하기",
+"수업 끝나고 30초 복습하기",
+"쉬는 시간 30초 복습하기",
+"하루 10분 책 읽기",
+"하루 n분 공부하기",
+"모르는 문제 1개 질문하기",
+"모르는 단어 1개 찾아보기",
+"하루 영어 단어 n개 보기",
+"시험 전 5분 복습하기",
+"필기 빠짐없이 하기",
+"수업 시간 집중 10분 유지하기",
+"하루 한 문제 다시 풀기",
+"오늘 배운 것 한 줄 정리하기",
+"지각하지 않기",
+"숙제 미루지 않기",
+
+"친구 1명 칭찬하기",
+"친구 이름 불러주기",
+"친구 말 끝까지 듣기",
+"먼저 인사하기",
+"선생님께 90도 인사하기",
+"고맙습니다 말하기",
+"부모님께 감사 표현하기",
+"하루 1번 웃으며 말하기",
+"욕 대신 좋은 말 쓰기",
+"갈등 생기면 5초 멈추기",
+
+"책상 정리하기",
+"가방 정리하기",
+"교실 정리 돕기",
+"책상 위 쓰레기 바로 버리기",
+"하루 쓰레기 1개 줍기",
+"휴지 아껴쓰기",
+"종이 낭비 줄이기",
+"교실 불 끄기 확인하기",
+"물 아껴쓰기",
+"급식 남기지 않기",
+
+"하루 물 5컵 마시기",
+"하루 운동 n분 하기",
+"쉬는 시간 스쿼트 n개",
+"하루 팔굽혀펴기 n개",
+"플랭크 n초",
+"철봉 매달리기 n초",
+"계단 n회 이용하기",
+"스트레칭 n분 하기",
+"하루 n걸음 걷기",
+"엘리베이터 대신 계단 이용하기",
+
+"하루 1번 깊은 호흡",
+"거울 보고 웃기",
+"하늘 10초 바라보기",
+"하루 1번 나 자신 칭찬하기",
+"긍정 문장 1개 말하기",
+"화날 때 심호흡 3번 하기",
+"핸드폰 사용 n분 줄이기",
+"잠들기 전 핸드폰 멀리 두기",
+"밤 12시 전 잠들기",
+"아침 n분 일찍 일어나기",
+
+"하루 1번 메모하기",
+"하루 목표 점검하기",
+"하루 1번 감사 문자 보내기",
+"친구 도와주기",
+"모둠 활동 적극 참여하기",
+"발표 1번 도전하기",
+"실수해도 다시 도전하기",
+"포기하고 싶을 때 1번 더 시도하기",
+"하루 1번 미소 짓기",
+"친구 장점 1개 찾아보기",
+
+"수업 준비물 미리 챙기기",
+"다음 날 일정 확인하기",
+"가방에서 불필요한 것 빼기",
+"하루 1번 스트레칭 하기",
+"체육 시간 적극 참여하기",
+"집중 안 될 때 자리 바로잡기",
+"말 끊지 않기",
+"하루 1번 '괜찮아' 말하기",
+"시험 계획표 보기",
+"자기 전 오늘 점수 매기기"
+];
+
+function createButtons(list, containerId, inputId) {
+    const container = document.getElementById(containerId);
+    list.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "exampleBtn";
+        btn.innerText = item;
+        btn.onclick = () => addText(inputId, item);
+        container.appendChild(btn);
+    });
+}
+
+function addText(inputId, text) {
+    const input = document.getElementById(inputId);
+    if (!input.value.includes(text)) {
+        if (input.value === "") input.value = text;
+        else input.value += ", " + text;
+    }
+}
+
+createButtons(bigHabits, "bigButtons", "bigHabit");
+createButtons(smallHabits, "smallButtons", "smallHabit");
+
+let finalText = "";
+
+function generate() {
+    const name = document.getElementById("name").value;
+    const big = document.getElementById("bigHabit").value;
+    const small = document.getElementById("smallHabit").value;
+
+    finalText =
+`[1학년 7반 성장 선언]
+
+이름: ${name}
+
+나는 이런 사람이 될래요:
+${big}
+
+그런 사람이 되기 위한 작은 습관:
+${small}
+
+오늘의 작은 실천이 나를 바꾼다.
+`;
+
+    document.getElementById("result").innerHTML =
+        `<div class="resultBox"><pre>${finalText}</pre></div>`;
+}
+
+function copyText() {
+    navigator.clipboard.writeText(finalText);
+    alert("복사 완료! 담임샘께 제출하세요 😊");
+}
+</script>
+
+</body>
+</html>
