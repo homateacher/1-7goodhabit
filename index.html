@@ -1,4 +1,233 @@
-// ===== 🌱 추가 작은 습관 90개 =====
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌱 1학년 7반 성장 선언</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #c3f0ca, #f9f7d9);
+    padding: 15px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+}
+
+h2 { text-align: center; }
+
+label { font-weight: bold; font-size: 14px; }
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 8px 0 12px 0;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.buttonBox {
+    background: white;
+    padding: 12px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.exampleBtn {
+    padding: 10px 14px;
+    border-radius: 20px;
+    border: none;
+    margin: 5px;
+    background-color: #40916c;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.mainBtn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 25px;
+    border: none;
+    margin-top: 10px;
+    background-color: #2d6a4f;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.resultBox {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 15px;
+    white-space: pre-wrap;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h2>🌱 나는 이런 사람이 될래요 🌱</h2>
+
+<label>👤 이름</label>
+<input type="text" id="name">
+
+<label>🎯 나는 이런 사람이 될래요</label>
+<input type="text" id="bigHabit">
+<div class="buttonBox" id="bigButtons"></div>
+
+<label>✨ 작은 습관</label>
+<input type="text" id="smallHabit">
+<div class="buttonBox" id="smallButtons"></div>
+
+<button class="mainBtn" onclick="generate()">📜 선언서 만들기</button>
+<button class="mainBtn" onclick="copyText()">📋 복사하기</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+// ===== 🎯 큰 목표 (45개) =====
+const bigHabits = [
+"긍정적으로 생각하는 사람",
+"끝까지 해내는 사람",
+"배움을 놓치지 않는 사람",
+"시간 약속을 잘 지키는 사람",
+"책임감 있는 사람",
+"스스로 공부하는 사람",
+"남을 존중하는 사람",
+"감사할 줄 아는 사람",
+"건강을 챙기는 사람",
+"감정을 잘 다루는 사람",
+"차분한 사람",
+"정리정돈 잘하는 사람",
+"미루지 않는 사람",
+"도전하는 사람",
+"친구를 배려하는 사람",
+"솔직한 사람",
+"집중력 있는 사람",
+"자신을 믿는 사람",
+"밝은 에너지를 주는 사람",
+"약속을 지키는 사람",
+"꾸준한 사람",
+"성실한 사람",
+"예의 바른 사람",
+"배려 깊은 사람",
+"몸과 마음이 건강한 사람",
+"작은 일도 소중히 하는 사람",
+"도망치지 않는 사람",
+"생각을 글로 정리하는 사람",
+"목표를 세우고 실천하는 사람",
+"매일 조금씩 성장하는 사람",
+"all 1등급 받는 사람",
+"공부하는 근육보이",
+"공부하는 근육걸",
+"체력 좋은 학생",
+"멘탈 강한 사람",
+"포기 안 하는 사람",
+"루틴 있는 사람",
+"자기관리 잘하는 사람",
+"말보다 행동하는 사람",
+"선생님께 신뢰받는 학생",
+"스스로 자랑스러운 사람",
+"친구들에게 좋은 영향 주는 사람",
+"집중 잘하는 사람",
+"자기 자신을 아끼는 사람",
+"미래를 준비하는 사람"
+  // ===== 🌟 추가 큰 목표 45개 =====
+"실수해도 다시 도전하는 사람",
+"비교하지 않고 나를 키우는 사람",
+"어제의 나보다 성장하는 사람",
+"작은 성공을 쌓는 사람",
+"어려운 일을 피하지 않는 사람",
+"힘들어도 도망치지 않는 사람",
+"스스로 선택하고 책임지는 사람",
+"남의 말을 존중하며 듣는 사람",
+"자기 감정을 솔직하게 표현하는 사람",
+"친구의 다름을 인정하는 사람",
+"상처 주는 말을 하지 않는 사람",
+"자기 자신을 응원하는 사람",
+"노력의 가치를 아는 사람",
+"과정보다 결과에 집착하지 않는 사람",
+"배운 것을 실천하는 사람",
+"하루를 헛되이 보내지 않는 사람",
+"계획을 세우고 점검하는 사람",
+"지금 할 일을 먼저 하는 사람",
+"도움이 필요할 때 말할 줄 아는 사람",
+"감정을 조절할 수 있는 사람",
+"스트레스를 건강하게 푸는 사람",
+"친구를 지켜주는 사람",
+"말과 행동이 같은 사람",
+"부끄러움을 이겨내는 사람",
+"발표를 두려워하지 않는 사람",
+"자기 장점을 찾는 사람",
+"실패에서 배우는 사람",
+"나쁜 습관을 줄이는 사람",
+"건강한 루틴을 만드는 사람",
+"하루를 돌아보는 사람",
+"타인을 이해하려 노력하는 사람",
+"말을 신중하게 하는 사람",
+"교실 분위기를 좋게 만드는 사람",
+"남 탓하지 않는 사람",
+"책임을 회피하지 않는 사람",
+"목표를 포기하지 않는 사람",
+"꾸준히 기록하는 사람",
+"감사 표현을 아끼지 않는 사람",
+"혼자서도 잘 해내는 사람",
+"함께하면 더 잘하는 사람",
+"마음을 단단하게 키우는 사람",
+"집중력을 기르는 사람",
+"건강한 생각을 선택하는 사람",
+"나를 믿고 앞으로 가는 사람",
+"미래의 나를 준비하는 사람"
+];
+
+// ===== ✨ 작은 습관 (정확히 90개) =====
+const smallHabits = [
+"하루 감사 3가지 적기","하루 한 줄 일기 쓰기","자기 전 잘한 일 1개 적기",
+"아침에 오늘 목표 1줄 쓰기","수업 후 30초 복습","수업 전 30초 예습",
+"모르는 문제 1개 질문하기","모르는 단어 1개 찾아보기","시험 전 5분 복습",
+"하루 영어 단어 n개 보기","하루 수학 문제 n개 풀기","필기 빠짐없이 하기",
+"집중 타이머 n분 실행","휴대폰 사용 n분 줄이기","숙제 바로 시작하기",
+"지각하지 않기","친구 1명 칭찬하기","먼저 인사하기",
+"부모님께 감사 표현하기","선생님께 공손히 인사하기","친구 말 끝까지 듣기",
+"화날 때 5초 멈추기","하루 1번 깊은 호흡","거울 보고 웃기",
+"하루 긍정 문장 1개 말하기","욕 대신 좋은 말 쓰기","하루 쓰레기 1개 줍기",
+"책상 정리하기","가방 정리하기","방 정리 n분 하기",
+"물 n컵 마시기","계단 이용하기","하루 걷기 n걸음",
+"팔굽혀펴기 n개","스쿼트 n개","플랭크 n초",
+"철봉 매달리기 n초","스트레칭 n분","줄넘기 n개",
+"독서 n쪽 하기","뉴스 기사 1개 읽기","발표 1번 도전하기",
+"모둠 활동 적극 참여하기","틀린 문제 다시 풀기","하루 복습 n분",
+"잠들기 전 휴대폰 끄기","아침에 바로 일어나기","식사 시간 지키기",
+"천천히 말하기","눈 보고 대화하기","약속 시간 5분 전 도착",
+"감정 일기 쓰기","칭찬 스티커 모으기","친구 도와주기",
+"급식 남기지 않기","편식 줄이기","운동장 한 바퀴 걷기",
+"하루 스트레칭 n초","자기 전 감사 기도","좋은 말 메모하기",
+"실수 인정하기","변명하지 않기","하루 도전 1개 하기",
+"수업 집중 10분 유지","하루 스마트폰 n회 덜 보기","교실 청소 도와주기",
+"책 n분 읽기","계획 점검 1번 하기","하루 목표 체크하기",
+"줄 서기 질서 지키기","교실 조용히 이동하기","웃으면서 말하기",
+"하루 칭찬 2번 하기","하루 반성 1줄 쓰기","부정적 말 줄이기",
+"하루 1번 감사 메시지 보내기","새로운 것 1개 배우기","실천 인증하기",
+"하루 한 번 도전 기록 남기기","정리 시간 지키기","준비물 미리 챙기기",
+"집중 방해 요소 치우기","바른 자세 유지 n분","눈 건강 휴식 n초",
+"친절한 말 3번 하기","좋은 습관 체크 표시하기","스스로 점수 매기기"
+  // ===== 🌱 추가 작은 습관 90개 =====
 "하루 실수 1개 기록하고 배운 점 적기",
 "오늘 기분을 한 단어로 표현하기",
 "친구에게 먼저 말 걸기",
@@ -85,3 +314,59 @@
 "친절한 말 3번 하기",
 "교실 분위기 좋게 만들기",
 "하루 마무리 반성 1줄 쓰기"
+];
+
+function createButtons(list, containerId, inputId) {
+    const container = document.getElementById(containerId);
+    list.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "exampleBtn";
+        btn.innerText = item;
+        btn.onclick = () => addText(inputId, item);
+        container.appendChild(btn);
+    });
+}
+
+function addText(inputId, text) {
+    const input = document.getElementById(inputId);
+    if (!input.value.includes(text)) {
+        if (input.value === "") input.value = text;
+        else input.value += ", " + text;
+    }
+}
+
+createButtons(bigHabits, "bigButtons", "bigHabit");
+createButtons(smallHabits, "smallButtons", "smallHabit");
+
+let finalText = "";
+
+function generate() {
+    const name = document.getElementById("name").value;
+    const big = document.getElementById("bigHabit").value;
+    const small = document.getElementById("smallHabit").value;
+
+    finalText =
+`[1학년 7반 성장 선언]
+
+이름: ${name}
+
+나는 이런 사람이 될래요:
+${big}
+
+그런 사람이 되기 위한 작은 습관:
+${small}
+
+오늘의 작은 실천이 나를 바꾼다.`;
+
+    document.getElementById("result").innerHTML =
+        `<div class="resultBox">${finalText}</div>`;
+}
+
+function copyText() {
+    navigator.clipboard.writeText(finalText);
+    alert("복사 완료 😊");
+}
+</script>
+
+</body>
+</html>
